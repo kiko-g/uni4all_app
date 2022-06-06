@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:logger/logger.dart';
 import 'package:uni/controller/bus_stops/departures_fetcher.dart';
 import 'package:uni/controller/local_storage/app_shared_preferences.dart';
+import 'package:uni/controller/uni4all/api.dart';
 import 'package:uni/model/entities/bus.dart';
 import 'package:uni/model/entities/bus_stop.dart';
 import 'package:uni/model/entities/course_unit.dart';
@@ -110,6 +112,9 @@ class NetworkRouter {
         NetworkRouter.getBaseUrlFromSession(session) + 'mob_fest_geral.perfil?';
     final response = await getWithCookies(
         url, {'pv_codigo': session.studentNumber}, session);
+
+    final String news = await Uni4AllApi.fetchNews();
+    log(news);
 
     if (response.statusCode == 200) {
       return Profile.fromResponse(response);
