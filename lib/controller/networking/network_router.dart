@@ -16,6 +16,7 @@ import 'package:uni/model/entities/trip.dart';
 import 'package:http/http.dart' as http;
 import 'package:query_params/query_params.dart';
 import 'package:synchronized/synchronized.dart';
+import 'package:uni/model/entities/uni4all/curritcular_unit.dart';
 extension UriString on String{
   /// Converts a [String] to an [Uri].
   Uri toUri() => Uri.parse(this);
@@ -113,8 +114,8 @@ class NetworkRouter {
     final response = await getWithCookies(
         url, {'pv_codigo': session.studentNumber}, session);
 
-    final String news = await Uni4AllApi.fetchNews();
-    log(news);
+    final CurricularUnit result = await Uni4AllApi.getCurricularUnit(486249);
+    log(result.code);
 
     if (response.statusCode == 200) {
       return Profile.fromResponse(response);
