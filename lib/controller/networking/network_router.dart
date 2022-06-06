@@ -16,7 +16,7 @@ import 'package:uni/model/entities/trip.dart';
 import 'package:http/http.dart' as http;
 import 'package:query_params/query_params.dart';
 import 'package:synchronized/synchronized.dart';
-import 'package:uni/model/entities/uni4all/curritcular_unit.dart';
+import 'package:uni/model/entities/uni4all/curricular_unit.dart';
 extension UriString on String{
   /// Converts a [String] to an [Uri].
   Uri toUri() => Uri.parse(this);

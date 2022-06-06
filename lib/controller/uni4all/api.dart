@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:uni/model/entities/uni4all/news.dart';
-import 'package:uni/model/entities/uni4all/curritcular_unit.dart';
+import 'package:uni/model/entities/uni4all/curricular_unit.dart';
 
 // FIXME: parse json for all response.body
 // TODO: create types for every entity in uni4all
