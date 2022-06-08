@@ -1,33 +1,50 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
+import 'package:uni/model/entities/uni4all/meal_review.dart';
 import 'package:uni/model/entities/uni4all/news.dart';
 import 'package:uni/model/entities/uni4all/curricular_unit.dart';
+import 'package:uni/model/entities/uni4all/parking_capacity.dart';
 import 'package:uni/model/entities/uni4all/profile.dart';
 import 'package:uni/model/entities/uni4all/exam_calendar.dart';
 import 'package:uni/model/entities/uni4all/calendar.dart';
 import 'package:uni/model/entities/uni4all/grades.dart';
 
-// FIXME: parse json for all response.body
-// TODO: create types for every entity in uni4all
-// return News.fromJson(json.decode(response.body));
-
 class Uni4AllApi {
-  static Future<String> register(String email, String password) async {
+  /// Returns [true] if successful
+  static Future<bool> testAuthentication(String token) async {
+    // FIXME:
+    final endpoint = 'https://uni4all.servehttp.com/authentication';
+    final http.Response response = await http.get(Uri.parse(endpoint));
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to register with uni4all api');
+    }
+  }
+
+  /// Returns [true] if account is successfully registered
+  static Future<bool> register(String email, String password) async {
+    // FIXME:
     final endpoint = 'https://uni4all.servehttp.com/authentication/register';
     final http.Response response = await http.post(Uri.parse(endpoint), body: {
       email: email,
       password: password,
     });
 
-    if (response.statusCode == 200) {
-      return response.body;
+    if (response.statusCode == 201) {
+      return true;
     } else {
-      throw Exception('Failed to register with uni4all api');
+      final sc = response.statusCode;
+      final message = json.decode(response.body).message;
+      throw Exception('Failed to register with uni4all api. $sc $message');
     }
   }
 
+  /// Returns
   static Future<String> login(String email, String password) async {
+    // FIXME:
     final endpoint = 'https://uni4all.servehttp.com/authentication/login';
     final http.Response response = await http.post(Uri.parse(endpoint), body: {
       email: email,
@@ -41,6 +58,8 @@ class Uni4AllApi {
     }
   }
 
+  // TODO:
+  /// Returns
   static Future<String> logout() async {
     final endpoint = 'https://uni4all.servehttp.com/authentication/logout';
     final http.Response response = await http.post(Uri.parse(endpoint));
@@ -52,6 +71,8 @@ class Uni4AllApi {
     }
   }
 
+  // TODO:
+  /// Returns
   static Future<String> getCalendar() async {
     final endpoint = 'https://uni4all.servehttp.com/calendar';
     final response = await http.get(Uri.parse(endpoint));
@@ -63,6 +84,8 @@ class Uni4AllApi {
     }
   }
 
+  // TODO:
+  /// Returns
   static Future<String> createCalendar(
     String summary,
     String description,
@@ -101,6 +124,8 @@ class Uni4AllApi {
     }
   }
 
+  // TODO:
+  /// Returns
   static Future<String> getExamsCalendar(int majorID) async {
     final endpoint = 'https://uni4all.servehttp.com/exams-calendar/${majorID}';
     final response = await http.get(Uri.parse(endpoint));
@@ -132,7 +157,7 @@ class Uni4AllApi {
     if (response.statusCode == 200) {
       final List<News> parsed = [];
       final List<dynamic> newsList = json.decode(response.body);
-      newsList.forEach((element) => parsed.add(json.decode(element)));
+      newsList.forEach((elem) => parsed.add(News.fromJson(json.decode(elem))));
       return parsed;
     } else {
       throw Exception('Failed to fetch news from uni4all api');
@@ -176,19 +201,20 @@ class Uni4AllApi {
     }
   }
 
-  /// Returns amount of remaining parking spaces
-  static Future<String> getParkingSpaceCapacity(int studentNumber) async {
+  /// Returns instance of [ParkingCapacity] with car parking stats
+  static Future<ParkingCapacity> getParkingSpaceCapacity() async {
     final endpoint = 'https://uni4all.servehttp.com/capacity';
     final response = await http.get(Uri.parse(endpoint));
 
     if (response.statusCode == 200) {
-      return response.body;
+      return ParkingCapacity.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to fetch car parking space from uni4all api');
     }
   }
 
-  ///
+  // TODO:
+  /// Returns
   static Future<String> deleteUser(int id) async {
     final endpoint = 'https://uni4all.servehttp.com/user/$id';
     final response = await http.delete(Uri.parse(endpoint));
@@ -200,7 +226,8 @@ class Uni4AllApi {
     }
   }
 
-  ///
+  // TODO:
+  /// Returns
   static Future<String> updateUserPassword(int id) async {
     final endpoint = 'https://uni4all.servehttp.com/user/update-password/$id';
     final response = await http.put(Uri.parse(endpoint));
@@ -212,7 +239,8 @@ class Uni4AllApi {
     }
   }
 
-  ///
+  /// Returns []
+  // TODO:
   static Future<String> forgotUserPassword(int id) async {
     final endpoint = 'https://uni4all.servehttp.com/user/forgot-password';
     final response = await http.put(Uri.parse(endpoint));
@@ -224,7 +252,8 @@ class Uni4AllApi {
     }
   }
 
-  ///
+  // TODO:
+  /// Returns
   static Future<String> resetUserPassword(int id) async {
     final endpoint = 'https://uni4all.servehttp.com/user/reset-password';
     final response = await http.put(Uri.parse(endpoint));
@@ -236,8 +265,32 @@ class Uni4AllApi {
     }
   }
 
+  /// Returns [true] if meal review was added
+  static Future<bool> createMealReview(MealReview mealReview) async {
+    final endpoint = 'https://uni4all.servehttp.com/feedback/meal';
+    final response =
+        await http.post(Uri.parse(endpoint), body: json.encode(mealReview));
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to delete user uni4all api');
+    }
+  }
+
+  /// Returns true if meal review was added
+  static Future<MealReview> getMealReview(MealReview mealReview) async {
+    final response = await http.get(Uri.https('https://uni4all.servehttp.com',
+        '/feedback/meal', json.decode(mealReview.toString())));
+
+    if (response.statusCode == 200) {
+      return MealReview.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('Failed to delete user uni4all api');
+    }
+  }
+
   // TODO: queues endpoints
   // TODO: groups endpoints
-  // TODO: feedback endpoints
   // TODO: notifications endpoints
 }

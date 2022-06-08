@@ -18,6 +18,7 @@ import 'package:query_params/query_params.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:uni/model/entities/uni4all/curricular_unit.dart';
 import 'package:uni/model/entities/uni4all/news.dart';
+import 'package:uni/model/entities/uni4all/parking_capacity.dart';
 extension UriString on String{
   /// Converts a [String] to an [Uri].
   Uri toUri() => Uri.parse(this);
@@ -115,8 +116,9 @@ class NetworkRouter {
     final response = await getWithCookies(
         url, {'pv_codigo': session.studentNumber}, session);
 
-    await Uni4AllApi.getCurricularUnit(486249);
-    await Uni4AllApi.getNews();
+    // await Uni4AllApi.getCurricularUnit(486249);
+    final ParkingCapacity res = await Uni4AllApi.getParkingSpaceCapacity();
+    log(res.p1ocupados.toString());
 
     if (response.statusCode == 200) {
       return Profile.fromResponse(response);
