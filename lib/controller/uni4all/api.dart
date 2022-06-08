@@ -9,9 +9,10 @@ import 'package:uni/model/entities/uni4all/profile.dart';
 import 'package:uni/model/entities/uni4all/exam_calendar.dart';
 import 'package:uni/model/entities/uni4all/calendar.dart';
 import 'package:uni/model/entities/uni4all/grades.dart';
+import 'package:uni/model/entities/uni4all/teacher_review.dart';
 
 class Uni4AllApi {
-  /// Returns [true] if successful
+  /// Returns [true] if successfully tested auth
   static Future<bool> testAuthentication(String token) async {
     // FIXME:
     final endpoint = 'https://uni4all.servehttp.com/authentication';
@@ -20,7 +21,9 @@ class Uni4AllApi {
     if (response.statusCode == 200) {
       return true;
     } else {
-      throw Exception('Failed to register with uni4all api');
+      final sc = response.statusCode;
+      final message = json.decode(response.body).message;
+      throw Exception('Test authentication failed. $sc: $message');
     }
   }
 
@@ -38,12 +41,12 @@ class Uni4AllApi {
     } else {
       final sc = response.statusCode;
       final message = json.decode(response.body).message;
-      throw Exception('Failed to register with uni4all api. $sc $message');
+      throw Exception('Failed to register with uni4all api. $sc: $message');
     }
   }
 
-  /// Returns
-  static Future<String> login(String email, String password) async {
+  /// Returns [true] if login action is successful
+  static Future<bool> login(String email, String password) async {
     // FIXME:
     final endpoint = 'https://uni4all.servehttp.com/authentication/login';
     final http.Response response = await http.post(Uri.parse(endpoint), body: {
@@ -52,64 +55,26 @@ class Uni4AllApi {
     });
 
     if (response.statusCode == 200) {
-      return response.body;
+      return true;
     } else {
-      throw Exception('Failed to login with uni4all api');
+      final sc = response.statusCode;
+      final message = json.decode(response.body).message;
+      throw Exception('Failed to login with uni4all api. $sc: $message');
     }
   }
 
-  // TODO:
-  /// Returns
-  static Future<String> logout() async {
+  /// Returns [true] if logout action is successful
+  static Future<bool> logout() async {
+    // FIXME:
     final endpoint = 'https://uni4all.servehttp.com/authentication/logout';
     final http.Response response = await http.post(Uri.parse(endpoint));
 
     if (response.statusCode == 200) {
-      return response.body;
+      return true;
     } else {
-      throw Exception('Failed to logout with uni4all api');
-    }
-  }
-
-  // TODO:
-  /// Returns
-  static Future<String> getCalendar() async {
-    final endpoint = 'https://uni4all.servehttp.com/calendar';
-    final response = await http.get(Uri.parse(endpoint));
-
-    if (response.statusCode == 200) {
-      return response.body;
-    } else {
-      throw Exception('Failed to fetch calendar from uni4all api');
-    }
-  }
-
-  // TODO:
-  /// Returns
-  static Future<String> createCalendar(
-    String summary,
-    String description,
-    String location,
-    String date,
-    String startTime,
-    String endTime,
-    String recurrence,
-  ) async {
-    final endpoint = 'https://uni4all.servehttp.com/calendar/create';
-    final response = await http.post(Uri.parse(endpoint), body: {
-      'summary': summary,
-      'description': description,
-      'location': location,
-      'date': date,
-      'startTime': startTime,
-      'endTime': endTime,
-      'recurrence': recurrence
-    });
-
-    if (response.statusCode == 200) {
-      return response.body;
-    } else {
-      throw Exception('Failed to create calendar with uni4all api');
+      final sc = response.statusCode;
+      final message = json.decode(response.body).message;
+      throw Exception('Failed to logout with uni4all api. $sc: $message');
     }
   }
 
@@ -265,8 +230,35 @@ class Uni4AllApi {
     }
   }
 
+  /// Returns
+  static Future<String> getCalendar() async {
+    // FIXME:
+    final endpoint = 'https://uni4all.servehttp.com/calendar';
+    final response = await http.get(Uri.parse(endpoint));
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception('Failed to fetch calendar from uni4all api');
+    }
+  }
+
+  /// Returns
+  static Future<String> createCalendar() async {
+    // FIXME:
+    final endpoint = 'https://uni4all.servehttp.com/calendar/create';
+    final response = await http.post(Uri.parse(endpoint));
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception('Failed to create calendar with uni4all api');
+    }
+  }
+
   /// Returns [true] if meal review was added
   static Future<bool> createMealReview(MealReview mealReview) async {
+    // FIXME:
     final endpoint = 'https://uni4all.servehttp.com/feedback/meal';
     final response =
         await http.post(Uri.parse(endpoint), body: json.encode(mealReview));
@@ -274,19 +266,53 @@ class Uni4AllApi {
     if (response.statusCode == 200) {
       return true;
     } else {
-      throw Exception('Failed to delete user uni4all api');
+      final sc = response.statusCode;
+      throw Exception('Failed to create meal review with uni4all api. ($sc)');
     }
   }
 
-  /// Returns true if meal review was added
+  /// Returns [true] if teacher review was added
+  static Future<bool> createTeacherReview(TeacherReview teacherReview) async {
+    // FIXME:
+    final endpoint = 'https://uni4all.servehttp.com/feedback/meal';
+    final response =
+        await http.post(Uri.parse(endpoint), body: json.encode(teacherReview));
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      final sc = response.statusCode;
+      throw Exception(
+          'Failed to create teacher review with uni4all api. ($sc)');
+    }
+  }
+
+  /// Returns [MealReview] instance with specified parameters
   static Future<MealReview> getMealReview(MealReview mealReview) async {
+    // FIXME: parse arrays of meal reviews
     final response = await http.get(Uri.https('https://uni4all.servehttp.com',
-        '/feedback/meal', json.decode(mealReview.toString())));
+        '/feedback/teacher', json.decode(mealReview.toString())));
 
     if (response.statusCode == 200) {
       return MealReview.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Failed to delete user uni4all api');
+      final sc = response.statusCode;
+      throw Exception('Failed to get meal review with uni4all api. ($sc)');
+    }
+  }
+
+  /// Returns [TeacherReview] instance with specified parameters
+  static Future<TeacherReview> getTeacherReview(
+      TeacherReview teacherReview) async {
+    // FIXME: parse arrays of teacher reviews
+    final response = await http.get(Uri.https('https://uni4all.servehttp.com',
+        '/feedback/teacher', json.decode(teacherReview.toString())));
+
+    if (response.statusCode == 200) {
+      return TeacherReview.fromJson(json.decode(response.body));
+    } else {
+      final sc = response.statusCode;
+      throw Exception('Failed to get teacher review with uni4all api. ($sc)');
     }
   }
 
