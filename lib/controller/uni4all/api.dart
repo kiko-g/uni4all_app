@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:uni/model/entities/uni4all/news.dart';
 import 'package:uni/model/entities/uni4all/curricular_unit.dart';
@@ -9,7 +10,7 @@ import 'package:uni/model/entities/uni4all/grades.dart';
 
 // FIXME: parse json for all response.body
 // TODO: create types for every entity in uni4all
-// return News.fromJson(jsonDecode(response.body));
+// return News.fromJson(json.decode(response.body));
 
 class Uni4AllApi {
   static Future<String> register(String email, String password) async {
@@ -94,7 +95,7 @@ class Uni4AllApi {
     final response = await http.get(Uri.parse(endpoint));
 
     if (response.statusCode == 200) {
-      return CurricularUnit.fromJson(jsonDecode(response.body));
+      return CurricularUnit.fromJson(json.decode(response.body));
     } else {
       throw Exception('Failed to fetch curricular unit info from uni4all api');
     }
@@ -111,6 +112,7 @@ class Uni4AllApi {
     }
   }
 
+  /// Return the student's [Grades]
   static Future<String> getStudentGrades(int studentNumber) async {
     final endpoint = 'https://uni4all.servehttp.com/grades/$studentNumber';
     final response = await http.get(Uri.parse(endpoint));
@@ -122,17 +124,22 @@ class Uni4AllApi {
     }
   }
 
-  static Future<String> getNews() async {
+  /// Return a [List] of [News]
+  static Future<List<News>> getNews() async {
     final endpoint = 'https://uni4all.servehttp.com/news';
     final response = await http.get(Uri.parse(endpoint));
 
     if (response.statusCode == 200) {
-      return response.body;
+      final List<News> parsed = [];
+      final List<dynamic> newsList = json.decode(response.body);
+      newsList.forEach((element) => parsed.add(json.decode(element)));
+      return parsed;
     } else {
       throw Exception('Failed to fetch news from uni4all api');
     }
   }
 
+  /// Returns the student's [Schedule]
   static Future<String> getStudentSchedule(int studentNumber) async {
     final endpoint = 'https://uni4all.servehttp.com/schedule/student';
     final response = await http.get(Uri.parse(endpoint));
@@ -144,6 +151,7 @@ class Uni4AllApi {
     }
   }
 
+  /// Returns the student's [Profile]
   static Future<String> getStudentProfile(int studentNumber) async {
     final endpoint = 'https://uni4all.servehttp.com/profile/$studentNumber';
     final response = await http.get(Uri.parse(endpoint));
@@ -155,8 +163,10 @@ class Uni4AllApi {
     }
   }
 
+  /// Returns the student's [List] of [Exam]
   static Future<String> getStudentExams(int studentNumber) async {
-    final endpoint = 'https://uni4all.servehttp.com/student-exams/${studentNumber}';
+    final endpoint =
+        'https://uni4all.servehttp.com/student-exams/${studentNumber}';
     final response = await http.get(Uri.parse(endpoint));
 
     if (response.statusCode == 200) {
@@ -166,6 +176,7 @@ class Uni4AllApi {
     }
   }
 
+  /// Returns amount of remaining parking spaces
   static Future<String> getParkingSpaceCapacity(int studentNumber) async {
     final endpoint = 'https://uni4all.servehttp.com/capacity';
     final response = await http.get(Uri.parse(endpoint));
@@ -177,6 +188,7 @@ class Uni4AllApi {
     }
   }
 
+  ///
   static Future<String> deleteUser(int id) async {
     final endpoint = 'https://uni4all.servehttp.com/user/$id';
     final response = await http.delete(Uri.parse(endpoint));
@@ -188,6 +200,7 @@ class Uni4AllApi {
     }
   }
 
+  ///
   static Future<String> updateUserPassword(int id) async {
     final endpoint = 'https://uni4all.servehttp.com/user/update-password/$id';
     final response = await http.put(Uri.parse(endpoint));
@@ -199,6 +212,7 @@ class Uni4AllApi {
     }
   }
 
+  ///
   static Future<String> forgotUserPassword(int id) async {
     final endpoint = 'https://uni4all.servehttp.com/user/forgot-password';
     final response = await http.put(Uri.parse(endpoint));
@@ -210,6 +224,7 @@ class Uni4AllApi {
     }
   }
 
+  ///
   static Future<String> resetUserPassword(int id) async {
     final endpoint = 'https://uni4all.servehttp.com/user/reset-password';
     final response = await http.put(Uri.parse(endpoint));

@@ -168,8 +168,8 @@ class CurricularUnit {
       code: json['code'],
       acronym: json['acronym'],
       name: json['name'],
-      courses: json['courses'],
-      teachers: json['teachers'],
+      // courses: json['courses'],
+      // teachers: json['teachers'],
       language: json['language'],
       objectives: json['objectives'],
       outcomesAndCompetences: json['outcomesAndCompetences'],
@@ -180,13 +180,13 @@ class CurricularUnit {
       complementaryBibliography: json['complementaryBibliography'],
       teachingMethodsAndActivities: json['teachingMethodsAndActivities'],
       evaluation: json['evaluation'],
-      assessmentComponents: json['assessmentComponents'],
-      courseUnitsTimes: json['courseUnitsTimes'],
+      // assessmentComponents: json['assessmentComponents'],
+      // courseUnitsTimes: json['courseUnitsTimes'],
       examEligibility: json['examEligibility'],
       calculationFormula: json['calculationFormula'],
       specialAssessment: json['specialAssessment'],
       classificationImprovement: json['classificationImprovement'],
-      classes: json['classes'],
+      // classes: json['classes'],
     );
   }
 }
