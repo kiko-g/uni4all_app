@@ -1,12 +1,11 @@
+import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:logger/logger.dart';
 import 'package:uni/controller/bus_stops/departures_fetcher.dart';
 import 'package:uni/controller/local_storage/app_shared_preferences.dart';
-import 'package:uni/controller/uni4all/api.dart';
 import 'package:uni/model/entities/bus.dart';
 import 'package:uni/model/entities/bus_stop.dart';
 import 'package:uni/model/entities/course_unit.dart';
@@ -16,10 +15,10 @@ import 'package:uni/model/entities/trip.dart';
 import 'package:http/http.dart' as http;
 import 'package:query_params/query_params.dart';
 import 'package:synchronized/synchronized.dart';
-import 'package:uni/model/entities/uni4all/curricular_unit.dart';
-import 'package:uni/model/entities/uni4all/news.dart';
-import 'package:uni/model/entities/uni4all/parking_capacity.dart';
-extension UriString on String{
+import 'package:uni/controller/uni4all/api.dart';
+import 'package:uni/model/entities/uni4all/api_response.dart';
+
+extension UriString on String {
   /// Converts a [String] to an [Uri].
   Uri toUri() => Uri.parse(this);
 }
@@ -33,7 +32,6 @@ class NetworkRouter {
   static Lock loginLock = Lock();
 
   static Function onReloginFail = () {};
-
 
   /// Creates an authenticated [Session] on the given [faculty] with the
   /// given username [user] and password [pass].
@@ -111,14 +109,13 @@ class NetworkRouter {
 
   /// Returns the user's [Profile].
   static Future<Profile> getProfile(Session session) async {
+    final news = await Uni4AllApi.get('/news');
+    log(news[0]['title']);
+
     final url =
         NetworkRouter.getBaseUrlFromSession(session) + 'mob_fest_geral.perfil?';
     final response = await getWithCookies(
         url, {'pv_codigo': session.studentNumber}, session);
-
-    // await Uni4AllApi.getCurricularUnit(486249);
-    final ParkingCapacity res = await Uni4AllApi.getParkingSpaceCapacity();
-    log(res.p1ocupados.toString());
 
     if (response.statusCode == 200) {
       return Profile.fromResponse(response);
