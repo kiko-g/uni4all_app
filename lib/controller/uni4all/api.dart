@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
+import 'package:uni/model/entities/uni4all/group.dart';
 import 'package:uni/model/entities/uni4all/meal_review.dart';
 import 'package:uni/model/entities/uni4all/news.dart';
 import 'package:uni/model/entities/uni4all/curricular_unit.dart';
@@ -41,7 +42,7 @@ class Uni4AllApi {
     } else {
       final sc = response.statusCode;
       final message = json.decode(response.body).message;
-      throw Exception('Failed to register with uni4all api. $sc: $message');
+      throw Exception('Failed to register with uni4all API. $sc: $message');
     }
   }
 
@@ -59,7 +60,7 @@ class Uni4AllApi {
     } else {
       final sc = response.statusCode;
       final message = json.decode(response.body).message;
-      throw Exception('Failed to login with uni4all api. $sc: $message');
+      throw Exception('Failed to login with uni4all API. $sc: $message');
     }
   }
 
@@ -74,7 +75,7 @@ class Uni4AllApi {
     } else {
       final sc = response.statusCode;
       final message = json.decode(response.body).message;
-      throw Exception('Failed to logout with uni4all api. $sc: $message');
+      throw Exception('Failed to logout with uni4all API. $sc: $message');
     }
   }
 
@@ -88,7 +89,7 @@ class Uni4AllApi {
     } else {
       final sc = response.statusCode;
       throw Exception(
-          'Failed to get curricular unit info from uni4all api. ($sc)');
+          'Failed to get curricular unit info from uni4all API. ($sc)');
     }
   }
 
@@ -102,7 +103,7 @@ class Uni4AllApi {
       return response.body;
     } else {
       final sc = response.statusCode;
-      throw Exception('Failed to get course info from uni4all api. ($sc)');
+      throw Exception('Failed to get course info from uni4all API. ($sc)');
     }
   }
 
@@ -116,7 +117,7 @@ class Uni4AllApi {
       return response.body;
     } else {
       final sc = response.statusCode;
-      throw Exception('Failed to get exams calendar from uni4all api. ($sc)');
+      throw Exception('Failed to get exams calendar from uni4all API. ($sc)');
     }
   }
 
@@ -130,7 +131,7 @@ class Uni4AllApi {
       return response.body;
     } else {
       final sc = response.statusCode;
-      throw Exception('Failed to get exams calendar from uni4all api. ($sc)');
+      throw Exception('Failed to get exams calendar from uni4all API. ($sc)');
     }
   }
 
@@ -148,7 +149,50 @@ class Uni4AllApi {
       return parsed;
     } else {
       final sc = response.statusCode;
-      throw Exception('Failed to get student grades from uni4all api. ($sc)');
+      throw Exception('Failed to get student grades from uni4all API. ($sc)');
+    }
+  }
+
+  /// Returns [Group] with groupId provided if it exists
+  static Future<Group> getGroup(int groupId) async {
+    final endpoint = 'https://uni4all.servehttp.com/groups/$groupId';
+    final response = await http.get(Uri.parse(endpoint));
+
+    if (response.statusCode == 200) {
+      return Group.fromJson(json.decode(response.body));
+    } else {
+      final sc = response.statusCode;
+      throw Exception('Failed to get group from uni4all API. ($sc)');
+    }
+  }
+
+  /// Returns [List<Group>] with all existing groups
+  static Future<List<Group>> getGroups() async {
+    final endpoint = 'https://uni4all.servehttp.com/groups';
+    final response = await http.get(Uri.parse(endpoint));
+
+    if (response.statusCode == 200) {
+      final List<Group> parsed = [];
+      final List<dynamic> groupList = json.decode(response.body);
+      groupList
+          .forEach((elem) => parsed.add(Group.fromJson(json.decode(elem))));
+      return parsed;
+    } else {
+      final sc = response.statusCode;
+      throw Exception('Failed to get groups from uni4all API. ($sc)');
+    }
+  }
+
+  /// Returns [true] if successfully updated group with value groupId
+  static Future<bool> updateGroup(int groupId, Group newGroup) async {
+    final endpoint = 'https://uni4all.servehttp.com/groups';
+    final response = await http.patch(Uri.parse(endpoint), body: newGroup);
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      final sc = response.statusCode;
+      throw Exception('Failed to get news from uni4all API. ($sc)');
     }
   }
 
@@ -166,7 +210,7 @@ class Uni4AllApi {
       return parsed;
     } else {
       final sc = response.statusCode;
-      throw Exception('Failed to get news from uni4all api. ($sc)');
+      throw Exception('Failed to get news from uni4all API. ($sc)');
     }
   }
 
@@ -179,7 +223,7 @@ class Uni4AllApi {
       return response.body;
     } else {
       final sc = response.statusCode;
-      throw Exception('Failed to get student schedule from uni4all api. ($sc)');
+      throw Exception('Failed to get student schedule from uni4all API. ($sc)');
     }
   }
 
@@ -192,7 +236,7 @@ class Uni4AllApi {
       return response.body;
     } else {
       final sc = response.statusCode;
-      throw Exception('Failed to get student schedule from uni4all api. ($sc)');
+      throw Exception('Failed to get student schedule from uni4all API. ($sc)');
     }
   }
 
@@ -206,7 +250,7 @@ class Uni4AllApi {
       return response.body;
     } else {
       final sc = response.statusCode;
-      throw Exception('Failed to get student exams from uni4all api. ($sc)');
+      throw Exception('Failed to get student exams from uni4all API. ($sc)');
     }
   }
 
@@ -219,7 +263,7 @@ class Uni4AllApi {
       return ParkingCapacity.fromJson(json.decode(response.body));
     } else {
       final sc = response.statusCode;
-      throw Exception('Failed to get car parking stats from uni4all api.($sc)');
+      throw Exception('Failed to get car parking stats from uni4all API.($sc)');
     }
   }
 
@@ -233,7 +277,7 @@ class Uni4AllApi {
       return response.body;
     } else {
       final sc = response.statusCode;
-      throw Exception('Failed to delete user uni4all api. ($sc)');
+      throw Exception('Failed to delete user uni4all API. ($sc)');
     }
   }
 
@@ -247,7 +291,7 @@ class Uni4AllApi {
       return response.body;
     } else {
       final sc = response.statusCode;
-      throw Exception('Failed to delete user uni4all api. ($sc)');
+      throw Exception('Failed to delete user uni4all API. ($sc)');
     }
   }
 
@@ -261,7 +305,7 @@ class Uni4AllApi {
       return response.body;
     } else {
       final sc = response.statusCode;
-      throw Exception('Failed to delete user uni4all api. ($sc)');
+      throw Exception('Failed to delete user uni4all API. ($sc)');
     }
   }
 
@@ -275,7 +319,7 @@ class Uni4AllApi {
       return response.body;
     } else {
       final sc = response.statusCode;
-      throw Exception('Failed to delete user uni4all api. ($sc)');
+      throw Exception('Failed to delete user uni4all API. ($sc)');
     }
   }
 
@@ -289,7 +333,7 @@ class Uni4AllApi {
       return response.body;
     } else {
       final sc = response.statusCode;
-      throw Exception('Failed to get calendar from uni4all api. ($sc)');
+      throw Exception('Failed to get calendar from uni4all API. ($sc)');
     }
   }
 
@@ -303,7 +347,7 @@ class Uni4AllApi {
       return response.body;
     } else {
       final sc = response.statusCode;
-      throw Exception('Failed to create calendar with uni4all api. ($sc)');
+      throw Exception('Failed to create calendar with uni4all API. ($sc)');
     }
   }
 
@@ -318,7 +362,7 @@ class Uni4AllApi {
       return true;
     } else {
       final sc = response.statusCode;
-      throw Exception('Failed to create meal review with uni4all api. ($sc)');
+      throw Exception('Failed to create meal review with uni4all API. ($sc)');
     }
   }
 
@@ -334,7 +378,7 @@ class Uni4AllApi {
     } else {
       final sc = response.statusCode;
       throw Exception(
-          'Failed to create teacher review with uni4all api. ($sc)');
+          'Failed to create teacher review with uni4all API. ($sc)');
     }
   }
 
@@ -348,7 +392,7 @@ class Uni4AllApi {
       return MealReview.fromJson(json.decode(response.body));
     } else {
       final sc = response.statusCode;
-      throw Exception('Failed to get meal review with uni4all api. ($sc)');
+      throw Exception('Failed to get meal review with uni4all API. ($sc)');
     }
   }
 
@@ -363,7 +407,7 @@ class Uni4AllApi {
       return TeacherReview.fromJson(json.decode(response.body));
     } else {
       final sc = response.statusCode;
-      throw Exception('Failed to get teacher review with uni4all api. ($sc)');
+      throw Exception('Failed to get teacher review with uni4all API. ($sc)');
     }
   }
 
