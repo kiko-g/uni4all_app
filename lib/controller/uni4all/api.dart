@@ -78,41 +78,81 @@ class Uni4AllApi {
     }
   }
 
-  static Future<CurricularUnit> getCurricularUnit(int id) async {
-    final endpoint = 'https://uni4all.servehttp.com/curricular-unit/${id}';
+  static Future<CurricularUnit> getCurricularUnit(int occurrenceId) async {
+    final endpoint =
+        'https://uni4all.servehttp.com/curricular-unit/${occurrenceId}';
     final response = await http.get(Uri.parse(endpoint));
 
     if (response.statusCode == 200) {
       return CurricularUnit.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Failed to fetch curricular unit info from uni4all api');
+      final sc = response.statusCode;
+      throw Exception(
+          'Failed to get curricular unit info from uni4all api. ($sc)');
     }
   }
 
-  // TODO:
-  /// Returns
-  static Future<String> getExamsCalendar(int majorID) async {
-    final endpoint = 'https://uni4all.servehttp.com/exams-calendar/${majorID}';
+  /// Returns Sigarra URL [String] with curricular unit occurrence
+  static Future<String> getCurricularUnitURL(int occurrenceId) async {
+    final endpoint =
+        'https://uni4all.servehttp.com/curricular-unit/${occurrenceId}';
     final response = await http.get(Uri.parse(endpoint));
 
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw Exception('Failed to fetch exams calendar from uni4all api');
+      final sc = response.statusCode;
+      throw Exception('Failed to get course info from uni4all api. ($sc)');
+    }
+  }
+
+  /// Returns [ExamCalendar]
+  static Future<String> getExamsCalendar(int majorId) async {
+    // FIXME: array of exams
+    final endpoint = 'https://uni4all.servehttp.com/exams-calendar/${majorId}';
+    final response = await http.get(Uri.parse(endpoint));
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      final sc = response.statusCode;
+      throw Exception('Failed to get exams calendar from uni4all api. ($sc)');
+    }
+  }
+
+  /// Returns Sigarra URL [String] with exams calendar
+  static Future<String> getExamsCalendarURL(int majorId) async {
+    final endpoint =
+        'https://uni4all.servehttp.com/exams-calendar/${majorId}/url';
+    final response = await http.get(Uri.parse(endpoint));
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      final sc = response.statusCode;
+      throw Exception('Failed to get exams calendar from uni4all api. ($sc)');
     }
   }
 
   /// Return the student's [Grades]
-  static Future<String> getStudentGrades(int studentNumber) async {
+  static Future<List<Grades>> getStudentGrades(int studentNumber) async {
+    // FIXME: array grades stuff
     final endpoint = 'https://uni4all.servehttp.com/grades/$studentNumber';
     final response = await http.get(Uri.parse(endpoint));
 
     if (response.statusCode == 200) {
-      return response.body;
+      final List<Grades> parsed = [];
+      final List<dynamic> gradesList = json.decode(response.body);
+      gradesList
+          .forEach((elem) => parsed.add(Grades.fromJson(json.decode(elem))));
+      return parsed;
     } else {
-      throw Exception('Failed to fetch student grades from uni4all api');
+      final sc = response.statusCode;
+      throw Exception('Failed to get student grades from uni4all api. ($sc)');
     }
   }
+
+  // TODO: groups endpoints
 
   /// Return a [List] of [News]
   static Future<List<News>> getNews() async {
@@ -125,7 +165,8 @@ class Uni4AllApi {
       newsList.forEach((elem) => parsed.add(News.fromJson(json.decode(elem))));
       return parsed;
     } else {
-      throw Exception('Failed to fetch news from uni4all api');
+      final sc = response.statusCode;
+      throw Exception('Failed to get news from uni4all api. ($sc)');
     }
   }
 
@@ -137,7 +178,8 @@ class Uni4AllApi {
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw Exception('Failed to fetch student schedule from uni4all api');
+      final sc = response.statusCode;
+      throw Exception('Failed to get student schedule from uni4all api. ($sc)');
     }
   }
 
@@ -149,7 +191,8 @@ class Uni4AllApi {
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw Exception('Failed to fetch student schedule from uni4all api');
+      final sc = response.statusCode;
+      throw Exception('Failed to get student schedule from uni4all api. ($sc)');
     }
   }
 
@@ -162,7 +205,8 @@ class Uni4AllApi {
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw Exception('Failed to fetch student exams from uni4all api');
+      final sc = response.statusCode;
+      throw Exception('Failed to get student exams from uni4all api. ($sc)');
     }
   }
 
@@ -174,7 +218,8 @@ class Uni4AllApi {
     if (response.statusCode == 200) {
       return ParkingCapacity.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Failed to fetch car parking space from uni4all api');
+      final sc = response.statusCode;
+      throw Exception('Failed to get car parking stats from uni4all api.($sc)');
     }
   }
 
@@ -187,7 +232,8 @@ class Uni4AllApi {
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw Exception('Failed to delete user uni4all api');
+      final sc = response.statusCode;
+      throw Exception('Failed to delete user uni4all api. ($sc)');
     }
   }
 
@@ -200,7 +246,8 @@ class Uni4AllApi {
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw Exception('Failed to delete user uni4all api');
+      final sc = response.statusCode;
+      throw Exception('Failed to delete user uni4all api. ($sc)');
     }
   }
 
@@ -213,7 +260,8 @@ class Uni4AllApi {
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw Exception('Failed to delete user uni4all api');
+      final sc = response.statusCode;
+      throw Exception('Failed to delete user uni4all api. ($sc)');
     }
   }
 
@@ -226,7 +274,8 @@ class Uni4AllApi {
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw Exception('Failed to delete user uni4all api');
+      final sc = response.statusCode;
+      throw Exception('Failed to delete user uni4all api. ($sc)');
     }
   }
 
@@ -239,7 +288,8 @@ class Uni4AllApi {
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw Exception('Failed to fetch calendar from uni4all api');
+      final sc = response.statusCode;
+      throw Exception('Failed to get calendar from uni4all api. ($sc)');
     }
   }
 
@@ -252,7 +302,8 @@ class Uni4AllApi {
     if (response.statusCode == 200) {
       return response.body;
     } else {
-      throw Exception('Failed to create calendar with uni4all api');
+      final sc = response.statusCode;
+      throw Exception('Failed to create calendar with uni4all api. ($sc)');
     }
   }
 
@@ -316,7 +367,7 @@ class Uni4AllApi {
     }
   }
 
-  // TODO: queues endpoints
-  // TODO: groups endpoints
   // TODO: notifications endpoints
+
+  // TODO: queues endpoints
 }

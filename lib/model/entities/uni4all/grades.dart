@@ -41,7 +41,7 @@ class Grades {
 
   factory Grades.fromJson(Map<String, dynamic> json) {
     return Grades(
-        major: json['major'],
+      major: json['major'],
       grades: json['grades'],
     );
   }
