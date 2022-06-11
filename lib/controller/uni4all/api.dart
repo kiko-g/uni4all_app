@@ -1,7 +1,10 @@
 // ignore_for_file: lines_longer_than_80_chars
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
+import 'package:uni/controller/networking/network_router.dart';
+import 'package:uni/model/entities/session.dart';
 
 class Uni4AllApi {
   static final String domain = 'uni4all.servehttp.com';
@@ -9,6 +12,15 @@ class Uni4AllApi {
   static final Map<String, String> headers = {
     'Content-Type': 'application/json; charset=UTF-8'
   };
+
+  static Future<String> fetchHtmlPage(String url, Session session, [Map<String, String> query]) async {
+    final response = await NetworkRouter.getWithCookies(
+        url,
+        query ?? {},
+        session
+    );
+    return response.body;
+  }
 
   /// Peforms `GET` operation on **uni4all** API
   static Future get(String route, [Map<String, dynamic> params]) async {
