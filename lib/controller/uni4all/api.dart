@@ -10,7 +10,7 @@ class Uni4AllApi {
   static final String domain = 'uni4all.servehttp.com';
   static final String baseUrl = 'https://uni4all.servehttp.com';
   static final Map<String, String> headers = {
-    'Content-Type': 'application/json; charset=UTF-8'
+    'Content-Type': 'application/x-www-form-urlencoded'
   };
 
   static Future<String> fetchHtmlPage(String url, Session session, [Map<String, String> query]) async {
@@ -20,6 +20,21 @@ class Uni4AllApi {
         session
     );
     return response.body;
+  }
+
+  static Future<List<String>> fetchHtmlPages(List<String> urls, Session session, [Map<String, String> query]) async {
+    final List<String> htmls = [];
+    
+    for (var i = 0; i < urls.length; i++) {
+      final response = await NetworkRouter.getWithCookies(
+        urls[i],
+        query ?? {},
+        session
+      );
+      htmls.add(response.body);
+    }
+
+    return htmls;
   }
 
   /// Peforms `GET` operation on **uni4all** API
@@ -38,7 +53,7 @@ class Uni4AllApi {
   }
 
   /// Peforms `POST` operation on **uni4all** API
-  static Future post(String route, [Map<String, String> body, Map<String, dynamic> params]) async {
+  static Future post(String route, [Map<String, dynamic> body, Map<String, dynamic> params]) async {
     final response = await http.post(
       Uri.https(domain, route, params),
       headers: headers,
@@ -54,7 +69,7 @@ class Uni4AllApi {
   }
 
   /// Peforms `PUT` operation on **uni4all** API
-  static Future put(String route, [Map<String, String> body, Map<String, dynamic> params]) async {
+  static Future put(String route, [Map<String, dynamic> body, Map<String, dynamic> params]) async {
     final response = await http.put(
       Uri.https(domain, route, params), 
       headers: headers, 
@@ -70,7 +85,7 @@ class Uni4AllApi {
   }
 
   /// Peforms `DELETE` operation on **uni4all** API
-  static Future delete(String route, [Map<String, String> body, Map<String, dynamic> params]) async {
+  static Future delete(String route, [Map<String, dynamic> body, Map<String, dynamic> params]) async {
     final response = await http.delete(
       Uri.https(domain, route, params), 
       headers: headers, 
@@ -86,7 +101,7 @@ class Uni4AllApi {
   }
 
   /// Peforms `PATCH` operation on **uni4all** API
-  static Future patch(String route, [Map<String, String> body, Map<String, dynamic> params]) async {
+  static Future patch(String route, [Map<String, dynamic> body, Map<String, dynamic> params]) async {
     final response = await http.patch(
       Uri.https(domain, route, params), 
       headers: headers, 
