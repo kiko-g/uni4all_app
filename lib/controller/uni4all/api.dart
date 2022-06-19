@@ -73,7 +73,7 @@ class Uni4AllApi {
     catch (e) {
       return Uni4AllApiResponse(
         success: false,
-        message: '[UNI4ALL API] Failed to GET "$route"',
+        message: '[UNI4ALL API] Error while trying GET "$route"',
         content: null
       );
     }
@@ -81,92 +81,124 @@ class Uni4AllApi {
 
   /// Peforms `POST` operation on **uni4all** API. Returns [Uni4AllApiResponse]
   static Future<Uni4AllApiResponse> post(String route, [Map<String, dynamic> body, Map<String, dynamic> params]) async {
-    final response = await http.post(
-      Uri.https(domain, route, params),
-      headers: headers,
-      body: json.encode(body)
-    );
-
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return Uni4AllApiResponse(
-        success: true,
-        message: '[UNI4ALL API] Successfully executed POST "$route"',
-        content: json.decode(response.body)
+    try {
+      final response = await http.post(
+        Uri.https(domain, route, params),
+        headers: headers,
+        body: json.encode(body)
       );
-    } else {
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return Uni4AllApiResponse(
+          success: true,
+          message: '[UNI4ALL API] Successfully executed POST "$route"',
+          content: json.decode(response.body)
+        );
+      } else {
+        return Uni4AllApiResponse(
+          success: false,
+          message: '[UNI4ALL API] Failed POST "$route" ${_getAppendix(body, params, response)}',
+          content: json.decode(response.body)
+        );
+      }
+    } 
+    catch (e) {
       return Uni4AllApiResponse(
         success: false,
-        message: '[UNI4ALL API] Failed to POST "$route" ${_getAppendix(body, params, response)}',
-        content: json.decode(response.body)
+        message: '[UNI4ALL API] Error while trying POST "$route"',
+        content: null
       );
     }
   }
 
   /// Peforms `PUT` operation on **uni4all** API. Returns [Uni4AllApiResponse]
   static Future<Uni4AllApiResponse> put(String route, [Map<String, dynamic> body, Map<String, dynamic> params]) async {
-    final response = await http.put(
-      Uri.https(domain, route, params), 
-      headers: headers, 
-      body: json.encode(body)
-    );
-
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return Uni4AllApiResponse(
-        success: true,
-        message: '[UNI4ALL API] Successfully executed PUT "$route"',
-        content: json.decode(response.body)
+    try {
+      final response = await http.put(
+        Uri.https(domain, route, params),
+        headers: headers,
+        body: json.encode(body)
       );
-    } else {
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return Uni4AllApiResponse(
+          success: true,
+          message: '[UNI4ALL API] Successfully executed PUT "$route"',
+          content: json.decode(response.body)
+        );
+      } else {
+        return Uni4AllApiResponse(
+          success: false,
+          message: '[UNI4ALL API] Failed PUT "$route" ${_getAppendix(body, params, response)}',
+          content: json.decode(response.body)
+        );
+      }
+    } 
+    catch (e) {
       return Uni4AllApiResponse(
         success: false,
-        message: '[UNI4ALL API] Failed to PUT "$route" ${_getAppendix(body, params, response)}',
-        content: json.decode(response.body)
+        message: '[UNI4ALL API] Error while trying PUT "$route"',
+        content: null
       );
     }
   }
 
   /// Peforms `DELETE` operation on **uni4all** API. Returns [Uni4AllApiResponse]
   static Future<Uni4AllApiResponse> delete(String route, [Map<String, dynamic> body, Map<String, dynamic> params]) async {
-    final response = await http.delete(
-      Uri.https(domain, route, params), 
-      headers: headers, 
-      body: json.encode(body)
-    );
-
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return Uni4AllApiResponse(
-        success: true,
-        message: '[UNI4ALL API] Successfully executed DELETE "$route"',
-        content: json.decode(response.body)
+    try {
+      final response = await http.delete(
+        Uri.https(domain, route, params),
+        headers: headers,
+        body: json.encode(body)
       );
-    } else {
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return Uni4AllApiResponse(
+          success: true,
+          message: '[UNI4ALL API] Successfully executed DELETE "$route"',
+          content: json.decode(response.body)
+        );
+      } else {
+        return Uni4AllApiResponse(
+          success: false,
+          message: '[UNI4ALL API] Failed DELETE "$route" ${_getAppendix(body, params, response)}',
+          content: json.decode(response.body)
+        );
+      }
+    } 
+    catch (e) {
       return Uni4AllApiResponse(
         success: false,
-        message: '[UNI4ALL API] Failed to DELETE "$route" ${_getAppendix(body, params, response)}',
-        content: json.decode(response.body)
+        message: '[UNI4ALL API] Error while trying DELETE "$route"',
+        content: null
       );
     }
   }
 
   /// Peforms `PATCH` operation on **uni4all** API. Returns [Uni4AllApiResponse]
   static Future<Uni4AllApiResponse> patch(String route, [Map<String, dynamic> body, Map<String, dynamic> params]) async {
-    final response = await http.patch(
-      Uri.https(domain, route, params), 
-      headers: headers, 
-      body: json.encode(body)
-    );
-
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      return Uni4AllApiResponse(
-        success: true,
-        message: '[UNI4ALL API] Successfully executed PATCH "$route"',
-        content: json.decode(response.body)
+    try {
+      final response = await http.patch(
+        Uri.https(domain, route, params),
+        headers: headers,
+        body: json.encode(body)
       );
-    } else {
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return Uni4AllApiResponse(
+          success: true,
+          message: '[UNI4ALL API] Successfully executed PATCH "$route"',
+          content: json.decode(response.body)
+        );
+      } else {
+        return Uni4AllApiResponse(
+          success: false,
+          message: '[UNI4ALL API] Failed PATCH "$route" ${_getAppendix(body, params, response)}',
+          content: json.decode(response.body)
+        );
+      }
+    } 
+    catch (e) {
       return Uni4AllApiResponse(
         success: false,
-        message: '[UNI4ALL API] Failed to PATCH "$route" ${_getAppendix(body, params, response)}',
-        content: json.decode(response.body)
+        message: '[UNI4ALL API] Error while trying PATCH "$route"',
+        content: null
       );
     }
   }
