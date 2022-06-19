@@ -109,14 +109,10 @@ class NetworkRouter {
 
   /// Returns the user's [Profile].
   static Future<Profile> getProfile(Session session) async {
-    // final htmls = await Uni4AllApi.fetchHtmlPages(
-    //   [
-    //     'https://sigarra.up.pt/feup/pt/fest_geral.cursos_list?pv_num_unico=${session.studentNumber}',
-    //     'https://sigarra.up.pt/feup/pt/fest_geral.curso_percurso_academico_view?pv_fest_id=1314261'
-    //   ],
-    //   session
-    // );
-    // log(htmls[1].toString());
+    final Uni4AllApiResponse res = await Uni4AllApi.get('calendar');
+    log(res.success.toString());
+    log(res.message.toString());
+    log(res.content.toString());
 
     final url =
         NetworkRouter.getBaseUrlFromSession(session) + 'mob_fest_geral.perfil?';
